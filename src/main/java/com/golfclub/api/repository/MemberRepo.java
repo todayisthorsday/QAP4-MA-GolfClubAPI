@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class MemberRepo extends jpaRepo<Member, Long> {
-    List<Member> findByContainingIgnoreCase(String name);
+public interface MemberRepo extends JpaRepository<Member, Long> {
+    List<Member> findByNameContainingIgnoreCase(String name);
     List<Member> findByPhoneNumber(String phoneNumber);
     List<Member> findByStartDate(LocalDate startDate);
     }

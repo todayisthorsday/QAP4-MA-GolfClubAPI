@@ -12,9 +12,13 @@ import java.util.Optional;
 @Service
 public class MemberService {
     @Autowired
-    private MemberRepo memberRepo;
+    private final MemberRepo memberRepo;
 
-    public Member save(Member member) {
+    public MemberService(MemberRepo memberRepo) {
+        this.memberRepo = memberRepo;
+    }
+
+    public Member saveMember(Member member) {
         return memberRepo.save(member);
     }
 

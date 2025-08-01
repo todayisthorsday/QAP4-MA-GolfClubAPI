@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public class TournamentRepo extends JpaRepository<Tournament, Long> {
+public interface TournamentRepo extends JpaRepository<Tournament, Long> {
     List<Tournament> findByStartDate(LocalDate startDate);
     List<Tournament> findByLocationContainingIgnoreCase(String location);
 }
