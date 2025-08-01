@@ -3,7 +3,9 @@ package com.golfclub.api.service;
 import com.golfclub.api.model.Member;
 import com.golfclub.api.repository.MemberRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -41,4 +43,30 @@ public class MemberService {
     public List<Member> searchByStartDate(LocalDate startDate) {
         return memberRepo.findByStartDate(startDate);
     }
+
+    public List<Member> searchByMembershipType(String membershipType) {
+        return memberRepo.findByMembershipTypeContainingIgnoreCase(membershipType);
+    }
+
+    public Member updateMember(Long id, Member updatedMember) {
+        return memberRepo.findById(id).map(existingMember -> {
+            existingMember.setName(updatedMember.getName());
+            existingMember.setAddress(updatedMember.getAddress());
+            existingMember.setEmail(updatedMember.getEmail());
+            existingMember.setPhone(updatedMember.getPhone());
+            existingMember.setMembershipType(updatedMember.getMembershipType());
+            existingMember.setStartDate(updatedMember.getStartDate());
+            existingMember.setDurationInMonths(updatedMember.getDurationInMonths());
+            return memberRepo.save(existingMember);
+        }).orElseThrow(() -> new RuntimeException("Member not found"));
+    }
+
+
+    public void deleteMember(Long id) {
+        if (!memberRepo.existsById(id)) {
+            throw new RuntimeException("Member not found");
+        }
+        memberRepo.deleteById(id);
+    }
+
 }

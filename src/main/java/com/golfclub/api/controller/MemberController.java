@@ -3,6 +3,7 @@ package com.golfclub.api.controller;
 import com.golfclub.api.model.Member;
 import com.golfclub.api.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.format.DateTimeParseException;
 import org.springframework.web.server.ResponseStatusException;
@@ -53,5 +54,24 @@ public class MemberController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format. Use yyyy-MM-dd.");
         }
     }
+
+    @GetMapping("/search/by-membership")
+    public List<Member> searchByMembership(@RequestParam String membershipType) {
+        return memberService.searchByMembershipType(membershipType);
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Member> updateMember(@PathVariable Long id, @RequestBody Member member) {
+        Member updated = memberService.updateMember(id, member);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
+        memberService.deleteMember(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 }
