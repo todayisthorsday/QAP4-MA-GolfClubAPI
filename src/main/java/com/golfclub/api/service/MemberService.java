@@ -1,0 +1,40 @@
+package com.golfclub.api.service;
+
+import com.golfclub.api.model.Member;
+import com.golfclub.api.repository.MemberRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class MemberService {
+    @Autowired
+    private MemberRepo memberRepo;
+
+    public Member save(Member member) {
+        return memberRepo.save(member);
+    }
+
+    public List<Member> getAllMembers() {
+        return memberRepo.findAll();
+    }
+
+    public Optional<Member> getMemberById(Long id) {
+        return memberRepo.findById(id);
+    }
+
+    public List<Member> searchByName(String name) {
+        return memberRepo.findByNameContainingIgnoreCase(name);
+    }
+
+    public List<Member> searchByPhoneNumber(String phoneNumber) {
+        return memberRepo.findByPhoneNumber(phoneNumber);
+    }
+
+    public List<Member> searchByStartDate(LocalDate startDate) {
+        return memberRepo.findByStartDate(startDate);
+    }
+}
