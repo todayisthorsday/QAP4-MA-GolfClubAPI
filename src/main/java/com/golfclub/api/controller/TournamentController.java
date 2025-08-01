@@ -5,6 +5,10 @@ import com.golfclub.api.model.Tournament;
 import com.golfclub.api.service.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.time.format.DateTimeParseException;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +32,8 @@ public class TournamentController {
 
     @GetMapping("/{id}")
     public Tournament getTournamentById(@PathVariable Long id) {
-        return tournamentService.getTournamentById(id).orElse(null);
+        return tournamentService.getTournamentById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found"));
     }
 
     @PostMapping("/{tournamentId}/add-member/{memberId}")
@@ -43,7 +48,12 @@ public class TournamentController {
 
     @GetMapping("/search/by-start-date")
     public List<Tournament> searchByStartDate(@RequestParam String date) {
-        return tournamentService.searchByStartDate(LocalDate.parse(date));
+        try {
+            LocalDate parsedDate = LocalDate.parse(date);
+            return tournamentService.searchByStartDate(parsedDate);
+        } catch (DateTimeParseException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format. Use yyyy-MM-dd.");
+        }
     }
 
     @GetMapping("/{tournamentId}/members")

@@ -4,6 +4,9 @@ import com.golfclub.api.model.Member;
 import com.golfclub.api.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.time.format.DateTimeParseException;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,7 +30,8 @@ public class MemberController {
 
     @GetMapping("/{id}")
     public Member getMemberById(@PathVariable Long id) {
-        return memberService.getMemberById(id).orElse(null);
+        return memberService.getMemberById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found"));
     }
 
     @GetMapping("/search/by-name")
@@ -37,11 +41,17 @@ public class MemberController {
 
     @GetMapping("/search/by-phone")
     public List<Member> searchByPhone(@RequestParam String phone) {
-        return memberService.searchByPhoneNumber(phone);
+        return memberService.searchByPhone(phone);
     }
 
     @GetMapping("/search/by-start-date")
     public List<Member> searchByStartDate(@RequestParam String date) {
-        return memberService.searchByStartDate(LocalDate.parse(date));
+        try {
+            LocalDate parsedDate = LocalDate.parse(date);
+            return memberService.searchByStartDate(parsedDate);
+        } catch (DateTimeParseException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format. Use yyyy-MM-dd.");
+        }
     }
+
 }

@@ -34,8 +34,8 @@ public class MemberService {
         return memberRepo.findByNameContainingIgnoreCase(name);
     }
 
-    public List<Member> searchByPhoneNumber(String phoneNumber) {
-        return memberRepo.findByPhoneNumber(phoneNumber);
+    public List<Member> searchByPhone(String phoneNumber) {
+        return memberRepo.findByPhone(phoneNumber);
     }
 
     public List<Member> searchByStartDate(LocalDate startDate) {

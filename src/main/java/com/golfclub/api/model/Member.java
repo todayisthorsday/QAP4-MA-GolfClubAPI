@@ -22,6 +22,7 @@ public class Member {
     private String address;
     private String email;
     private String phone;
+    private String membershipType;
     private LocalDate startDate;
     private int durationInMonths;
 
